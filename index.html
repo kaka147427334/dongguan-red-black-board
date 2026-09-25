@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>东莞区域 · 门店订单完成率红黑榜</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#f6efe3;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;display:flex;justify-content:center;align-items:flex-start;padding:20px;min-height:100vh;}
+  body.plain{background:#fff;padding:0;}
+  .page{position:relative;width:900px;max-width:100%;border-radius:18px;overflow:hidden;box-shadow:0 8px 30px rgba(180,120,40,.18);padding:0 0 18px;color:#3a2e22;
+     background:linear-gradient(180deg,#fffdf7 0%,#fff4e2 42%,#ffe9c6 100%);}
+  body.plain .page{border-radius:0;box-shadow:none;}
+
+  /* 亮色喜庆光芒：顶部金色放射 + 红色氛围染色 */
+  .rays{position:absolute;top:-230px;left:50%;width:940px;height:540px;margin-left:-470px;pointer-events:none;
+       background:repeating-conic-gradient(from 0deg at 50% 0%, rgba(255,175,45,.17) 0deg 2.2deg, transparent 2.2deg 8deg);
+       mask-image:radial-gradient(ellipse at 50% 0%, rgba(0,0,0,.9) 0%, rgba(0,0,0,0) 66%);
+       -webkit-mask-image:radial-gradient(ellipse at 50% 0%, rgba(0,0,0,.9) 0%, rgba(0,0,0,0) 66%);
+       animation:spin 50s linear infinite;}
+  .rays2{position:absolute;top:-190px;left:50%;width:880px;height:470px;margin-left:-440px;pointer-events:none;
+        background:repeating-conic-gradient(from 0deg at 50% 0%, rgba(255,90,60,.10) 0deg 1.6deg, transparent 1.6deg 6.5deg);
+        mask-image:radial-gradient(ellipse at 50% 0%, rgba(0,0,0,.75) 0%, rgba(0,0,0,0) 58%);
+        -webkit-mask-image:radial-gradient(ellipse at 50% 0%, rgba(0,0,0,.75) 0%, rgba(0,0,0,0) 58%);
+        animation:spin2 70s linear infinite reverse;}
+  @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+  @keyframes spin2{from{transform:rotate(360deg);}to{transform:rotate(0deg);}}
+
+  .glow{position:absolute;top:-160px;left:50%;width:780px;height:430px;margin-left:-390px;pointer-events:none;
+        background:radial-gradient(ellipse at 50% 50%, rgba(255,205,110,.42) 0%, rgba(255,150,60,.16) 40%, rgba(255,120,50,0) 72%);
+        filter:blur(10px);}
+
+  /* 金色闪星 */
+  .spark{position:absolute;width:12px;height:12px;pointer-events:none;
+     background:radial-gradient(circle, rgba(255,190,60,.95) 0%, rgba(255,190,60,.35) 45%, rgba(255,190,60,0) 72%);
+     animation:tw 3.2s ease-in-out infinite;}
+  .spark::before,.spark::after{content:'';position:absolute;left:50%;top:50%;background:rgba(255,185,55,.75);}
+  .spark::before{width:22px;height:1.6px;margin:-0.8px 0 0 -11px;}
+  .spark::after{width:1.6px;height:22px;margin:-11px 0 0 -0.8px;}
+  @keyframes tw{0%,100%{opacity:.25;transform:scale(.6);}50%{opacity:1;transform:scale(1.15);}}
+  .s1{top:150px;left:52px;animation-delay:-.2s;}
+  .s2{top:262px;left:34px;animation-delay:-1.4s;}
+  .s3{top:392px;left:66px;animation-delay:-2.3s;}
+  .s4{top:520px;left:40px;animation-delay:-.9s;}
+  .s5{top:648px;left:70px;animation-delay:-1.9s;}
+  .s6{top:170px;right:56px;animation-delay:-1.1s;}
+  .s7{top:288px;right:38px;animation-delay:-2.6s;}
+  .s8{top:418px;right:70px;animation-delay:-.5s;}
+  .s9{top:548px;right:44px;animation-delay:-1.7s;}
+  .s10{top:676px;right:74px;animation-delay:-2.9s;}
+
+  /* 头部 */
+  header{position:relative;z-index:2;padding:34px 28px 20px;text-align:center;}
+  .eyebrow{display:inline-block;font-size:14px;font-weight:800;letter-spacing:2px;color:#fff;
+     padding:6px 16px;border-radius:20px;
+     background:linear-gradient(90deg,#e53935,#ff7043);box-shadow:0 3px 12px rgba(229,57,53,.32);margin-bottom:10px;}
+  h1{margin:8px 0 8px;font-size:31px;font-weight:900;letter-spacing:.5px;line-height:1.25;
+     background:linear-gradient(180deg,#c62828 0%,#e53935 42%,#ff9a1f 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+     filter:drop-shadow(0 2px 6px rgba(200,60,30,.22));}
+  .sub{margin:0;font-size:15px;color:#6b5b4a;letter-spacing:1px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;}
+  .sub b{color:#d32f2f;margin:0 3px;font-weight:800;}
+  .subtime{font-size:11.5px;font-weight:700;color:#8a6d3b;letter-spacing:.5px;padding:3px 10px;border-radius:12px;
+     border:1px solid rgba(214,158,46,.45);background:rgba(255,193,7,.14);white-space:nowrap;}
+
+  /* 榜单区 */
+  .sections{position:relative;z-index:2;padding:18px 24px 0;display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .board{border-radius:16px;overflow:hidden;background:rgba(255,255,255,.92);
+     box-shadow:0 6px 22px rgba(170,120,60,.16);}
+  .red{border:1px solid rgba(229,57,53,.28);}
+  .black{border:1px solid rgba(90,107,125,.30);}
+  .red .bhead{background:linear-gradient(90deg,#ff4d4f,#ff7875);}
+  .black .bhead{background:linear-gradient(90deg,#64748b,#475569);}
+  .bhead{padding:13px 16px;display:flex;align-items:center;justify-content:center;gap:10px;color:#fff;font-size:19px;font-weight:900;letter-spacing:1px;}
+  .bhead .icon{width:27px;height:27px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;}
+  .red .bhead .icon{background:#fff;color:#ff4d4f;box-shadow:0 0 10px rgba(255,255,255,.55);}
+  .black .bhead .icon{background:#ff4d4f;color:#fff;box-shadow:0 0 10px rgba(255,77,79,.45);}
+
+  .items{padding:12px 12px 13px;}
+  .store{position:relative;display:flex;align-items:center;gap:11px;padding:12px 11px;margin-bottom:9px;border-radius:12px;overflow:hidden;}
+  .store:last-child{margin-bottom:0;}
+  .red .store{background:linear-gradient(90deg,rgba(255,77,79,.12),rgba(255,77,79,.02));border-left:4px solid #ff4d4f;}
+  .black .store{background:linear-gradient(90deg,rgba(100,116,139,.16),rgba(100,116,139,.04));border-left:4px solid #64748b;}
+  .store::after{content:'';position:absolute;inset:0;pointer-events:none;
+     background:linear-gradient(105deg,rgba(255,255,255,0) 32%,rgba(255,255,255,.60) 48%,rgba(255,255,255,0) 64%);
+     animation:shine 3.2s linear infinite;}
+  .store:nth-child(2)::after{animation-delay:1s;}
+  .store:nth-child(3)::after{animation-delay:2s;}
+  @keyframes shine{0%{transform:translateX(-120%);}100%{transform:translateX(120%);}}
+
+  .rank{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;flex:none;color:#fff;}
+  .red .rank{background:linear-gradient(145deg,#ffb74d,#f57c00 60%,#e65100);box-shadow:0 3px 10px rgba(245,124,0,.35);}
+  .black .rank{background:linear-gradient(145deg,#94a3b8,#64748b 60%,#475569);box-shadow:0 3px 10px rgba(100,116,139,.32);}
+  .info{flex:1;min-width:0;}
+  .name{font-size:17px;font-weight:900;color:#2f2a24;letter-spacing:.3px;}
+  .meta{font-size:12.5px;color:#8a8078;margin-top:3px;}
+  .rate{margin-left:auto;text-align:right;}
+  .rnum{font-size:26px;font-weight:900;line-height:1;}
+  .red .rnum{color:#d32f2f;}
+  .black .rnum{color:#475569;}
+  .rlab{font-size:11px;color:#a09890;margin-top:2px;}
+
+  /* 备注 */
+  .note{position:relative;z-index:2;margin:14px 24px 0;padding:12px 14px;border-radius:12px;border:1px dashed rgba(214,158,46,.55);
+     background:rgba(255,193,7,.13);font-size:13px;color:#7a5c2e;line-height:1.7;}
+  .note b{color:#c62828;}
+
+  .foot{position:relative;z-index:2;margin:14px 24px 0;padding:14px 16px;border-radius:12px;text-align:center;
+     background:linear-gradient(90deg,#e53935,#ff8f00);color:#fff;font-size:15px;font-weight:900;letter-spacing:1px;
+     box-shadow:0 4px 18px rgba(229,57,53,.28);}
+
+  .dlwrap{margin:14px 24px 0;text-align:center;}
+  .dl{display:inline-block;padding:10px 24px;border-radius:10px;background:linear-gradient(90deg,#f9a825,#f57c00);color:#fff;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 4px 14px rgba(245,124,0,.3);}
+  body.plain .dlwrap{display:none;}
+
+  /* 移动端 */
+  @media (max-width:720px){
+    body{padding:10px;}
+    .page{border-radius:12px;}
+    header{padding:24px 16px 16px;}
+    h1{font-size:21px;}
+    .sub{font-size:13px;}
+    .subtime{font-size:10.5px;padding:2px 7px;}
+    .sections{padding:12px 12px 0;grid-template-columns:1fr;gap:12px;}
+    .bhead{font-size:17px;}
+    .items{padding:10px;}
+    .store{padding:11px 10px;}
+    .name{font-size:15.5px;}
+    .rnum{font-size:22px;}
+    .note,.foot,.dlwrap{margin:12px 12px 0;}
+    .foot{font-size:13.5px;}
+    .spark{display:none;}
+  }
+</style>
+</head>
+<body>
+<script>if(location.search.indexOf('plain=1')>=0) document.body.classList.add('plain');</script>
+<div class='page'>
+  <div class='glow'></div>
+  <div class='rays'></div>
+  <div class='rays2'></div>
+  <span class='spark s1'></span><span class='spark s2'></span><span class='spark s3'></span><span class='spark s4'></span><span class='spark s5'></span>
+  <span class='spark s6'></span><span class='spark s7'></span><span class='spark s8'></span><span class='spark s9'></span><span class='spark s10'></span>
+
+  <header>
+    <span class='eyebrow'>东莞区域 · 9月25日</span>
+    <h1>门店订单完成率红黑榜</h1>
+    <p class='sub'>今日锁单新增达成率<b>红榜前三</b>表扬 · <b>黑榜后三</b>督促<span class='subtime'>截止当日 16:30 最新数据</span></p>
+  </header>
+
+  <div class='sections'>
+    <div class='board red'>
+      <div class='bhead'><span class='icon'>★</span> 红榜 · 前三甲</div>
+      <div class='items'>
+        <div class='store'>
+          <span class='rank'>1</span>
+          <div class='info'>
+            <div class='name'>东莞零跑中心长安振安东路</div>
+            <div class='meta'>今日净增目标 3 · 今日净增 3</div>
+          </div>
+          <div class='rate'><div class='rnum'>88.9%</div><div class='rlab'>达成率</div></div>
+        </div>
+        <div class='store'>
+          <span class='rank'>2</span>
+          <div class='info'>
+            <div class='name'>东莞体验中心东城店</div>
+            <div class='meta'>今日净增目标 4 · 今日净增 3</div>
+          </div>
+          <div class='rate'><div class='rnum'>85.2%</div><div class='rlab'>达成率</div></div>
+        </div>
+        <div class='store'>
+          <span class='rank'>3</span>
+          <div class='info'>
+            <div class='name'>东莞体验中心厚街店</div>
+            <div class='meta'>今日净增目标 2 · 今日净增 2</div>
+          </div>
+          <div class='rate'><div class='rnum'>80.7%</div><div class='rlab'>达成率</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class='board black'>
+      <div class='bhead'><span class='icon'>!</span> 黑榜 · 后三名</div>
+      <div class='items'>
+        <div class='store'>
+          <span class='rank'>1</span>
+          <div class='info'>
+            <div class='name'>东莞零跑中心常朗路店</div>
+            <div class='meta'>今日净增目标 7 · 今日净增 1</div>
+          </div>
+          <div class='rate'><div class='rnum'>14.8%</div><div class='rlab'>达成率</div></div>
+        </div>
+        <div class='store'>
+          <span class='rank'>2</span>
+          <div class='info'>
+            <div class='name'>东莞零跑中心虎门车城店</div>
+            <div class='meta'>今日净增目标 6 · 今日净增 2</div>
+          </div>
+          <div class='rate'><div class='rnum'>32.1%</div><div class='rlab'>达成率</div></div>
+        </div>
+        <div class='store'>
+          <span class='rank'>3</span>
+          <div class='info'>
+            <div class='name'>东莞体验中心大岭山镇店</div>
+            <div class='meta'>今日净增目标 2 · 今日净增 1</div>
+          </div>
+          <div class='rate'><div class='rnum'>40.4%</div><div class='rlab'>达成率</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class='note'>说明：本期红黑榜<b>不参与</b>的门店为 <b>塘厦车城店、高埗车城店、高胜车城店、企石店</b>（日目标净增≤1 或数据异常，单独跟进）。黑榜门店请区域经理重点关注并制定提升动作。</div>
+
+  <div class='foot'>数据截止 2026-09-25 16:30 ｜ 排名依据「今日锁单新增达成率」</div>
+
+  <div class='dlwrap'><a class='dl' href='red-black-board.png' download='东莞区域门店红黑榜-9月25日.png'>保存高清长图</a></div>
+</div>
+</body>
+</html>
